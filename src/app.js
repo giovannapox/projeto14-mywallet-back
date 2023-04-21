@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import bcrypt from "bcrypt";
+// import transacoesRouter from "./routes/transacoes.routes.js";
+import usuariosRouter from "./routes/usuario.routes.js";
 
 // Criando o servidor
 const app = express();
@@ -11,6 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 dotenv.config();
+//app.use(transacoesRouter);
+app.use(usuariosRouter);
 
 // Conectando com Banco de Dados
 const mongoClient = new MongoClient(process.env.DATABASE_URL);
@@ -20,28 +23,11 @@ try {
 } catch (err) {
     console.log(err.message);
 }
-const db = mongoClient.db();
 
-// endpoints
-app.post("/cadastro", async (req, res) => {
-    const { nome, email, senha } = req.body;
-    const hash = bcrypt.hashSync(senha, 10);
+const db = mongoClient.db("MyWallet");
+export default db
 
-    try{
-        await db.collection('usuarios').insertOne({ nome, email, senha: hash });
-        res.sendStatus(201)
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-app.post("/", async (req, res) => {
-    try{
-
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
+// endpoint
 
 app.post("/nova-transacao/:tipo", async (req, res) => {
     try{
@@ -53,7 +39,7 @@ app.post("/nova-transacao/:tipo", async (req, res) => {
 
 app.get("/home", async (req, res) => {
     try{
-
+        
     } catch (err) {
         res.status(500).send(err.message);
     }
