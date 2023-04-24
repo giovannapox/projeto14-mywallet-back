@@ -1,17 +1,18 @@
 import db from "../app.js";
 
 export async function novaTransacao (req, res) {
-    const { authorization, usuario} = req.headers;
+    const { authorization} = req.headers;
     const transacao = req.body;
 
-    const token = authorization?.replace("Bearer", "");
-    const tokenExiste = await db.collection('logados').findOne({token: token, user: usuario})
+    const token = authorization?.replace("Bearer ", "");
+    const tokenExiste = await db.collection('logados').findOne({token: token})
+    if (!token || !tokenExiste) return res.sendStatus(401);
 
-    if (!usuario || !token || !tokenExiste) return res.sendStatus(401);
 
     try{
+        const usuario = await db.collection('usuarios').findOne({_id: tokenExiste.usuario})
         await db.collection('carteira').insertOne({
-            user: usuario,
+            email: usuario.email,
             value: transacao.value,
             type: transacao.type,
             date: transacao.date,
@@ -25,15 +26,16 @@ export async function novaTransacao (req, res) {
 }
 
 export async function listarTransacoes (req, res) {
-    const { authorization, usuario} = req.headers;
+    const { authorization } = req.headers;
 
-    const token = authorization?.replace("Bearer", "");
+    const token = authorization?.replace("Bearer ", "");
     const tokenExiste = await db.collection('logados').findOne({token: token})
+    const usuario = await db.collection('usuarios').findOne({_id: tokenExiste.usuario})
 
     if (!usuario || !token || !tokenExiste) return res.sendStatus(401);
 
     try {
-        const transacoes = await db.collection('carteira').find( {user: usuario} ).toArray();
+        const transacoes = await db.collection('carteira').find( {email: usuario.email} ).toArray();
         res.status(200).send(transacoes);
     } catch (err) {
         res.status(500).send(err.message);
