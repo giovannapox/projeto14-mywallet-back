@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-// import transacoesRouter from "./routes/transacoes.routes.js";
+import transacoesRouter from "./routes/transacoes.routes.js";
 import usuariosRouter from "./routes/usuario.routes.js";
 
 // Criando o servidor
@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 dotenv.config();
-//app.use(transacoesRouter);
+app.use(transacoesRouter);
 app.use(usuariosRouter);
 
 // Conectando com Banco de Dados
@@ -27,23 +27,6 @@ try {
 const db = mongoClient.db("MyWallet");
 export default db
 
-// endpoint
-
-app.post("/nova-transacao/:tipo", async (req, res) => {
-    try{
-
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-app.get("/home", async (req, res) => {
-    try{
-        
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
 
 // App esperando requisições
 const PORT = 5000;
