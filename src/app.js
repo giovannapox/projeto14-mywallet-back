@@ -16,7 +16,7 @@ app.use(transacoesRouter);
 app.use(usuariosRouter);
 
 // Conectando com Banco de Dados
-const mongoClient = new MongoClient(process.env.DATABASE_URL);
+const mongoClient = new MongoClient(process.env.MONGO_URI);
 try {
     await mongoClient.connect();
     console.log("MongoDB conectado");
@@ -30,4 +30,4 @@ export default db
 
 // App esperando requisições
 const PORT = 5000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(process.env.PORT, () => console.log(`Servidor rodando na porta ${process.env.PORT}`));
