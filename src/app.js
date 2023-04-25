@@ -16,7 +16,7 @@ app.use(transacoesRouter);
 app.use(usuariosRouter);
 
 // Conectando com Banco de Dados
-const mongoClient = new MongoClient(process.env.MONGO_URI);
+const mongoClient = new MongoClient(process.env.MONGO_URL);
 try {
     await mongoClient.connect();
     console.log("MongoDB conectado");
