@@ -22,7 +22,8 @@ export async function Logar (req, res){
         const usuario = await db.collection('usuarios').findOne({ email: email});
 
         await db.collection('logados').insertOne({ token: token, usuario: usuario._id});
-        res.status(200).send(token);
+        const user = {token, usuario: usuario.name} 
+        res.status(200).send(user);
     } catch (err){
         res.status(500).send(err.message);
     }

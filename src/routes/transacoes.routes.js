@@ -4,7 +4,7 @@ import { novaTransacao, listarTransacoes } from "../controllers/transacoes.contr
 
 const router = Router();
 
-router.post("/nova-transacao", transacoesValidacao, novaTransacao);
+router.post("/nova-transacao/:tipo", transacoesValidacao, novaTransacao);
 router.get("/home", listarTransacoes);
 
 export default router;
